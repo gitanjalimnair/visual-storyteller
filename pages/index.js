@@ -1,78 +1,157 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { useState, useRef } from 'react';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// Function to convert the uploaded file into a Base64 string
+const fileToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    // Crucial: Only get the Base64 data part after the comma
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = (error) => reject(error);
+  });
+};
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+export default function VisualStoryteller() {
+  const [vibeKeyword, setVibeKeyword] = useState('');
+  const [storyResult, setStoryResult] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const fileInputRef = useRef(null);
 
-export default function Home() {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setStoryResult('');
+
+    const imageFile = fileInputRef.current.files[0];
+
+    if (!imageFile || !vibeKeyword) {
+      setError("Please upload an image and enter a Vibe Keyword!");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // 1. Convert image to Base64
+      const imageBase64 = await fileToBase64(imageFile);
+
+      // 2. Call the secure Vercel API endpoint (/api/storyteller)
+      const response = await fetch('/api/storyteller', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imageBase64, vibeKeyword }),
+      });
+
+      // Handle the Vercel API response cleanly
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Use the error message returned from the backend's catch block
+        throw new Error(data.message || 'Server error. Check Vercel logs.');
+      }
+
+      // 3. Get the Markdown text result
+      setStoryResult(data.output);
+
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "An unexpected error occurred during Vibe Check.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Renders the Markdown output directly as a pre-formatted block for quick display
+  const MarkdownRenderer = ({ markdown }) => (
+    <pre style={styles.markdownOutput}>{markdown}</pre>
+  );
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black`}
-    >
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the index.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div style={styles.container}>
+      <h1 style={styles.title}>🖼️ The Visual Storyteller ✍️</h1>
+      <p style={styles.subtitle}>Let the Lens Poet analyze your image and craft a structured, metaphorical report.</p>
+
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>1. Upload your image:</label>
+          <input 
+            type="file" 
+            accept="image/*" 
+            ref={fileInputRef} 
+            disabled={loading}
+            style={styles.fileInput} 
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs/pages/getting-started?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>2. Enter your Guiding Vibe Keyword:</label>
+          <input
+            type="text"
+            value={vibeKeyword}
+            onChange={(e) => setVibeKeyword(e.target.value)}
+            placeholder="e.g., Nostalgia, Future Shock, Hidden Conflict"
+            disabled={loading}
+            required
+            style={styles.textInput}
+          />
         </div>
-      </main>
+
+        <button type="submit" disabled={loading} style={styles.button}>
+          {loading ? 'Analyzing Visuals...' : '✨ Generate Story'}
+        </button>
+      </form>
+
+      {error && <p style={styles.error}>Error: {error}</p>}
+      
+      {loading && <p style={styles.loading}>Analyzing Visuals... Please wait 10-15 seconds for the creative analysis.</p>}
+
+      {storyResult && (
+        <div style={styles.resultContainer}>
+          <h2 style={styles.resultTitle}>The Lens Poet's Report</h2>
+          <MarkdownRenderer markdown={storyResult} />
+        </div>
+      )}
     </div>
   );
 }
+
+// *** Simple, Clean Inline Styles ***
+const styles = {
+  container: { maxWidth: '900px', margin: '30px auto', padding: '30px', boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)', borderRadius: '15px', backgroundColor: '#FFFFFF', border: '1px solid #E0E0E0' },
+  title: { textAlign: 'center', color: '#0056b3', borderBottom: '3px solid #B3D9FF', paddingBottom: '15px', marginBottom: '20px' },
+  subtitle: { textAlign: 'center', color: '#003366', marginBottom: '35px', fontStyle: 'italic', fontSize: '1.1em' },
+  form: { display: 'flex', flexDirection: 'column', gap: '25px', padding: '30px', borderRadius: '10px', backgroundColor: '#F9F9F9', border: '1px solid #EEE' },
+  inputGroup: { display: 'flex', flexDirection: 'column' },
+  label: { fontWeight: 'bold', marginBottom: '8px', color: '#003366', fontSize: '1.05em' },
+  textInput: { padding: '12px', borderRadius: '6px', border: '1px solid #0056b3', fontSize: '16px' },
+  fileInput: { padding: '12px', border: '1px solid #0056b3', borderRadius: '6px' },
+  button: { 
+    padding: '15px', 
+    backgroundColor: '#007BFF', 
+    color: 'white', 
+    border: 'none', 
+    borderRadius: '8px', 
+    cursor: 'pointer', 
+    fontSize: '17px', 
+    marginTop: '15px', 
+    transition: 'background-color 0.3s' 
+  },
+  loading: { color: '#007BFF', textAlign: 'center', marginTop: '20px', fontStyle: 'italic' },
+  error: { color: '#DC3545', textAlign: 'center', marginTop: '20px', padding: '10px', backgroundColor: '#F8D7DA', border: '1px solid #DC3545', borderRadius: '4px' },
+  resultContainer: { marginTop: '50px', padding: '30px', border: '3px solid #007BFF', borderRadius: '15px', backgroundColor: '#E6F0FF' },
+  resultTitle: { color: '#0056b3', borderBottom: '2px solid #007BFF', paddingBottom: '10px', marginBottom: '20px' },
+  markdownOutput: {
+    whiteSpace: 'pre-wrap', // Keeps the Markdown formatting structure
+    fontFamily: 'monospace',
+    backgroundColor: '#FFFFFF',
+    padding: '15px',
+    borderRadius: '8px',
+    border: '1px solid #DDD',
+    fontSize: '1em',
+    lineHeight: '1.6',
+    color: '#333',
+  }
+};
