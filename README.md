@@ -2,7 +2,7 @@
 
 An AI-powered web application that generates rich, descriptive narratives from images using Generative AI.
 
-<img width="1084" height="2412" alt="1000147103" src="https://github.com/user-attachments/assets/e30d0fed-ba11-4f4e-93ff-b60d5e5cf54c" />
+<img width="1084" height="2412" alt="1000147102" src="https://github.com/user-attachments/assets/8ccd7099-22ea-4d72-93bd-ed5129a728af" />
 
 
 ---
