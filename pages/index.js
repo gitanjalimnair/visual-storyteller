@@ -118,40 +118,122 @@ export default function VisualStoryteller() {
   );
 }
 
-// *** Simple, Clean Inline Styles ***
+// *** Upgraded, Modern Inline Styles (Replace your current styles object with this) ***
 const styles = {
-  container: { maxWidth: '900px', margin: '30px auto', padding: '30px', boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)', borderRadius: '15px', backgroundColor: '#FFFFFF', border: '1px solid #E0E0E0' },
-  title: { textAlign: 'center', color: '#0056b3', borderBottom: '3px solid #B3D9FF', paddingBottom: '15px', marginBottom: '20px' },
-  subtitle: { textAlign: 'center', color: '#003366', marginBottom: '35px', fontStyle: 'italic', fontSize: '1.1em' },
-  form: { display: 'flex', flexDirection: 'column', gap: '25px', padding: '30px', borderRadius: '10px', backgroundColor: '#F9F9F9', border: '1px solid #EEE' },
-  inputGroup: { display: 'flex', flexDirection: 'column' },
-  label: { fontWeight: 'bold', marginBottom: '8px', color: '#003366', fontSize: '1.05em' },
-  textInput: { padding: '12px', borderRadius: '6px', border: '1px solid #0056b3', fontSize: '16px' },
-  fileInput: { padding: '12px', border: '1px solid #0056b3', borderRadius: '6px' },
-  button: { 
-    padding: '15px', 
-    backgroundColor: '#007BFF', 
-    color: 'white', 
-    border: 'none', 
-    borderRadius: '8px', 
-    cursor: 'pointer', 
-    fontSize: '17px', 
-    marginTop: '15px', 
-    transition: 'background-color 0.3s' 
+  container: { 
+    maxWidth: '800px', 
+    margin: '50px auto', 
+    padding: '40px', 
+    borderRadius: '24px', 
+    backgroundColor: '#ffffff', 
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.06)',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   },
-  loading: { color: '#007BFF', textAlign: 'center', marginTop: '20px', fontStyle: 'italic' },
-  error: { color: '#DC3545', textAlign: 'center', marginTop: '20px', padding: '10px', backgroundColor: '#F8D7DA', border: '1px solid #DC3545', borderRadius: '4px' },
-  resultContainer: { marginTop: '50px', padding: '30px', border: '3px solid #007BFF', borderRadius: '15px', backgroundColor: '#E6F0FF' },
-  resultTitle: { color: '#0056b3', borderBottom: '2px solid #007BFF', paddingBottom: '10px', marginBottom: '20px' },
+  title: { 
+    textAlign: 'center', 
+    color: '#1e293b', 
+    fontSize: '2.5rem',
+    fontWeight: '800',
+    letterSpacing: '-0.05em',
+    marginBottom: '10px'
+  },
+  subtitle: { 
+    textAlign: 'center', 
+    color: '#64748b', 
+    marginBottom: '40px', 
+    fontSize: '1.1rem',
+    lineHeight: '1.6'
+  },
+  form: { 
+    display: 'flex', 
+    flexDirection: 'column', 
+    gap: '24px', 
+    padding: '32px', 
+    borderRadius: '16px', 
+    backgroundColor: '#f8fafc', 
+    border: '1px solid #e2e8f0' 
+  },
+  inputGroup: { 
+    display: 'flex', 
+    flexDirection: 'column',
+    gap: '8px'
+  },
+  label: { 
+    fontWeight: '600', 
+    color: '#334155', 
+    fontSize: '0.95rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em'
+  },
+  textInput: { 
+    padding: '14px 16px', 
+    borderRadius: '12px', 
+    border: '1px solid #cbd5e1', 
+    fontSize: '16px',
+    backgroundColor: '#ffffff',
+    color: '#1e293b',
+    transition: 'all 0.2s ease',
+    outline: 'none'
+  },
+  fileInput: { 
+    padding: '25px', 
+    border: '2px dashed #cbd5e1', 
+    borderRadius: '12px',
+    backgroundColor: '#ffffff',
+    textAlign: 'center',
+    cursor: 'pointer'
+  },
+  button: { 
+    padding: '16px', 
+    backgroundColor: '#0f172a', // Sleek off-black/dark navy
+    color: '#ffffff', 
+    border: 'none', 
+    borderRadius: '12px', 
+    cursor: 'pointer', 
+    fontSize: '1rem', 
+    fontWeight: '600',
+    marginTop: '10px', 
+    transition: 'background-color 0.2s ease',
+    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.15)'
+  },
+  loading: { 
+    color: '#64748b', 
+    textAlign: 'center', 
+    marginTop: '30px', 
+    fontStyle: 'italic',
+    animation: 'pulse 2s infinite'
+  },
+  error: { 
+    color: '#991b1b', 
+    textAlign: 'center', 
+    marginTop: '25px', 
+    padding: '16px', 
+    backgroundColor: '#fef2f2', 
+    border: '1px solid #fee2e2', 
+    borderRadius: '12px',
+    fontWeight: '500'
+  },
+  resultContainer: { 
+    marginTop: '50px', 
+    padding: '40px', 
+    borderRadius: '20px', 
+    backgroundColor: '#fafafa', 
+    border: '1px solid #e5e5e5' 
+  },
+  resultTitle: { 
+    color: '#111111', 
+    fontSize: '1.75rem',
+    fontWeight: '700',
+    letterSpacing: '-0.03em',
+    borderBottom: '1px solid #e5e5e5', 
+    paddingBottom: '15px', 
+    marginBottom: '25px' 
+  },
   markdownOutput: {
-    whiteSpace: 'pre-wrap', // Keeps the Markdown formatting structure
-    fontFamily: 'monospace',
-    backgroundColor: '#FFFFFF',
-    padding: '15px',
-    borderRadius: '8px',
-    border: '1px solid #DDD',
-    fontSize: '1em',
-    lineHeight: '1.6',
-    color: '#333',
+    whiteSpace: 'pre-wrap', 
+    fontFamily: 'inherit', // Switched from ugly monospace to clean system font
+    fontSize: '1.05rem',
+    lineHeight: '1.8',
+    color: '#262626',
   }
 };
