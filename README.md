@@ -1,6 +1,6 @@
 🎨 Visual Storyteller
 
-https://visual-storyteller-50ingdvrp-gitanjalis-projects-b1b3bd2e.vercel.app/
+[https://visual-storyteller-50ingdvrp-gitanjalis-projects-b1b3bd2e.vercel.app/](https://visual-storyteller-delta.vercel.app/)
 
 An AI-powered web application that generates rich, descriptive narratives from images using Generative AI.
 
